@@ -73,25 +73,23 @@ public class FCFS {
     }
     private void processingGanttChart() {
         sort(processes, "arrival_time");
-        int start=0, end=0;
-        for (int i=0; i<no_of_processses; ++i) {
+        int start = 0, end = 0;
+        for (int i = 0; i < no_of_processses; ++i) {
             if (i == 0) {
                 start = processes[i].getArrivalTime();
-                end = processes[i].getArrivalTime()+processes[i].getBurstTime();
-            }
-            else {
-                if (chart.getLast().getEndTime() >= processes[i].getArrivalTime()) {
-                    start = chart.getLast().getEndTime();
-                    end = start+processes[i].getBurstTime();
+                end = start + processes[i].getBurstTime();
+            } else {
+                if (chart.get(chart.size()-1).getEndTime() < processes[i].getArrivalTime()) {
+                    start = processes[i].getArrivalTime();
+                } else {
+                    start = chart.get(chart.size() - 1).getEndTime();
                 }
-                else {
-                    System.out.println("\n\nCant' process this input");
-                    System.exit(0);
-                }
+                end = start + processes[i].getBurstTime();
             }
             chart.add(new GanttChart(processes[i].getId(), start, end));
         }
     }
+
     private void processingSolution() {
         for (int i=0; i<no_of_processses; ++i) {
             processes[i].setWaitingTime(chart.get(i).getStartTime() - processes[i].getArrivalTime());
